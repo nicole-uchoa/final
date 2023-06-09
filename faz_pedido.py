@@ -1,5 +1,4 @@
-# docker-compose -f docker-compose-expose.yml up
-
+# docker compose up -d
 from kafka import KafkaProducer
 
 # Configurações do Kafka

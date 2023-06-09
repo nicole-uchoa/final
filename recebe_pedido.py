@@ -2,13 +2,14 @@ import time
 from kafka import KafkaConsumer, KafkaProducer
 import queue
 import threading
-# Para iniciar o docker, entrar no diretório kafka-docker e rodar o comando $ docker-compose -f docker-compose-expose.yml up
+import unidecode
+import unicodedata
 
 # Configurações dos departamentos
 departamentos = {
-    'sanduiches': ['pão com carne', 'hambúrguer', 'queijo'],
-    'pratos_prontos': ['arroz', 'feijão', 'bife'],
-    'bebidas': ['refrigerante', 'suco', 'água'],
+    'sanduiches': ['pao com carne', 'hamburguer', 'queijo'],
+    'pratos_prontos': ['arroz', 'feijao', 'bife'],
+    'bebidas': ['refrigerante', 'suco', 'agua'],
     'sobremesas': ['bolo', 'sorvete', 'frutas']
 }
 
@@ -102,9 +103,13 @@ def processar_pedidos_sobremesas():
 def consumir_pedidos():
     for mensagem in consumer:
         pedido = mensagem.value.decode('utf-8')
-        departamento = None
+        # número para identificar o cliente
         cliente = mensagem.offset
+        # trata string de entrada
         pedido = str(pedido).lower()
+        pedido = unidecode.unidecode(pedido)
+
+        departamento = None
         for depto, alimentos in departamentos.items():
             if pedido in alimentos:
                 departamento = depto
